@@ -1,4 +1,4 @@
-// ShopBAM — Main JS
+// ShopBAM — Main JS (updated: product cards now link to product detail page)
 document.addEventListener('DOMContentLoaded', () => {
 
   let activeCategory = 'all';
@@ -24,17 +24,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Render products
-  function renderProducts(cat = 'all') {
-    const grid = document.getElementById('productsGrid');
-    if (!grid) return;
-    grid.innerHTML = '';
-    const filtered = cat === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.category === cat);
-    filtered.forEach((prod, i) => {
-      const card = document.createElement('div');
-      card.className = 'prod-card';
-      card.style.animationDelay = `${i * 50}ms`;
-      card.innerHTML = `
+  // Build a product card element (clicking card goes to product detail, + button adds to cart)
+  function buildProductCard(prod) {
+    const card = document.createElement('div');
+    card.className = 'prod-card';
+    card.style.cursor = 'pointer';
+    card.innerHTML = `
+      <a href="pages/product.html?id=${prod.id}" style="text-decoration:none;color:inherit;display:block;">
         <div class="prod-img" style="background:${prod.imgBg}">${prod.emoji}</div>
         <div class="prod-info">
           <div class="prod-name">${prod.name}</div>
@@ -44,19 +40,31 @@ document.addEventListener('DOMContentLoaded', () => {
               <div class="prod-price">$${prod.price}</div>
               <div class="prod-dist">${prod.distance}</div>
             </div>
-            <button class="add-btn" data-id="${prod.id}" aria-label="Add to cart">+</button>
           </div>
         </div>
-      `;
-      grid.appendChild(card);
+      </a>
+      <div style="padding:0 10px 12px;display:flex;justify-content:flex-end;margin-top:-36px;position:relative;z-index:1;">
+        <button class="add-btn" data-id="${prod.id}" aria-label="Add to cart">+</button>
+      </div>
+    `;
+    card.querySelector('.add-btn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      addToCart(parseInt(prod.id));
     });
+    return card;
+  }
 
-    // Add to cart listeners
-    grid.querySelectorAll('.add-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        addToCart(parseInt(btn.dataset.id));
-      });
+  // Render products grid
+  function renderProducts(cat = 'all') {
+    const grid = document.getElementById('productsGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    const filtered = cat === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.category === cat);
+    filtered.forEach((prod, i) => {
+      const card = buildProductCard(prod);
+      card.style.animationDelay = `${i * 50}ms`;
+      grid.appendChild(card);
     });
   }
 
@@ -91,31 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px 0;color:var(--text-tertiary);font-size:14px;">No products found for "${e.target.value}"</div>`;
         return;
       }
-      results.forEach((prod, i) => {
-        const card = document.createElement('div');
-        card.className = 'prod-card';
-        card.innerHTML = `
-          <div class="prod-img" style="background:${prod.imgBg}">${prod.emoji}</div>
-          <div class="prod-info">
-            <div class="prod-name">${prod.name}</div>
-            <div class="prod-store">${prod.store}</div>
-            <div class="prod-bottom">
-              <div class="prod-price-wrap">
-                <div class="prod-price">$${prod.price}</div>
-                <div class="prod-dist">${prod.distance}</div>
-              </div>
-              <button class="add-btn" data-id="${prod.id}" aria-label="Add to cart">+</button>
-            </div>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-      grid.querySelectorAll('.add-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          addToCart(parseInt(btn.dataset.id));
-        });
-      });
+      results.forEach(prod => grid.appendChild(buildProductCard(prod)));
     });
   }
 
