@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Store — ShopBAM</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    .store-hero { padding: 24px 16px 20px; background: var(--bg-primary); border-bottom: 0.5px solid var(--border); display: flex; align-items: center; gap: 16px; }
+    .store-hero-avatar { width: 64px; height: 64px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 32px; flex-shrink: 0; }
+    .store-hero-name { font-family: var(--font-display); font-size: 22px; margin-bottom: 4px; }
+    .store-hero-cat { font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; }
+    .store-hero-meta { display: flex; gap: 12px; font-size: 12px; color: var(--text-tertiary); }
+    .store-hero-meta span { color: var(--brand); font-weight: 500; }
+    .store-products { padding: 16px; }
+    .store-products-title { font-size: 15px; font-weight: 500; margin-bottom: 14px; }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <a href="../index.html" class="page-back">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    </a>
+    <div class="page-title" id="storeTitle">Store</div>
+  </header>
+
+  <div id="storeContent"></div>
+
+  <nav class="bottom-nav">
+    <a href="../index.html" class="nav-item">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Home</span>
+    </a>
+    <a href="search.html" class="nav-item">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <span>Search</span>
+    </a>
+    <a href="map.html" class="nav-item">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+      <span>Map</span>
+    </a>
+    <a href="../cart.html" class="nav-item">
+      <span class="nav-icon-wrap">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="nav-badge">0</span>
+      </span>
+      <span>Cart</span>
+    </a>
+    <a href="profile.html" class="nav-item">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <script src="../js/data.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const storeId = parseInt(params.get('id')) || 1;
+    const store = STORES.find(s => s.id === storeId);
+    const storeProducts = PRODUCTS.filter(p => p.storeId === storeId);
+
+    if (store) {
+      document.getElementById('storeTitle').textContent = store.name;
+      document.getElementById('storeContent').innerHTML = `
+        <div class="store-hero">
+          <div class="store-hero-avatar" style="background:${store.avatarBg}">${store.emoji}</div>
+          <div>
+            <div class="store-hero-name">${store.name}</div>
+            <div class="store-hero-cat">${store.categoryLabel}</div>
+            <div class="store-hero-meta">
+              <span>★ ${store.rating}</span>
+              <span>${store.reviews} reviews</span>
+              <span>${store.distance} away</span>
+            </div>
+            <div style="font-size:12px;color:var(--text-tertiary);margin-top:4px;">${store.address}</div>
+          </div>
+        </div>
+        <div class="store-products">
+          <div class="store-products-title">Products (${storeProducts.length})</div>
+          <div class="products-grid" id="storeProductsGrid"></div>
+        </div>`;
+
+      const grid = document.getElementById('storeProductsGrid');
+      storeProducts.forEach(prod => {
+        const card = document.createElement('div');
+        card.className = 'prod-card';
+        card.innerHTML = `
+          <div class="prod-img" style="background:${prod.imgBg}">${prod.emoji}</div>
+          <div class="prod-info">
+            <div class="prod-name">${prod.name}</div>
+            <div class="prod-store">${prod.store}</div>
+            <div class="prod-bottom">
+              <div class="prod-price-wrap">
+                <div class="prod-price">$${prod.price}</div>
+                <div class="prod-dist">${prod.distance}</div>
+              </div>
+              <button class="add-btn" data-id="${prod.id}">+</button>
+            </div>
+          </div>`;
+        grid.appendChild(card);
+      });
+
+      grid.querySelectorAll('.add-btn').forEach(btn => {
+        btn.addEventListener('click', () => addToCart(parseInt(btn.dataset.id)));
+      });
+    }
+
+    updateCartBadge();
+  </script>
+</body>
+</html>

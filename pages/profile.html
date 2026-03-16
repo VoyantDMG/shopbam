@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile — ShopBAM</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    .profile-header { background: var(--bg-primary); border-bottom: 0.5px solid var(--border); padding: 24px 16px; display: flex; align-items: center; gap: 16px; }
+    .profile-avatar { width: 64px; height: 64px; border-radius: 50%; background: var(--brand-light); display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; }
+    .profile-name { font-family: var(--font-display); font-size: 20px; margin-bottom: 2px; }
+    .profile-email { font-size: 13px; color: var(--text-secondary); }
+    .menu-section { padding: 16px; }
+    .menu-label { font-size: 11px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+    .menu-list { background: var(--bg-primary); border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+    .menu-item { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 0.5px solid var(--border); cursor: pointer; transition: background 0.15s; text-decoration: none; color: inherit; }
+    .menu-item:last-child { border-bottom: none; }
+    .menu-item:hover { background: var(--bg-secondary); }
+    .menu-item-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .menu-item-text { flex: 1; font-size: 14px; }
+    .menu-item-arrow { color: var(--text-tertiary); font-size: 16px; }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <a href="../index.html" class="page-back">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    </a>
+    <div class="page-title">Profile</div>
+  </header>
+
+  <div class="profile-header">
+    <div class="profile-avatar">🧑</div>
+    <div>
+      <div class="profile-name">Alex Johnson</div>
+      <div class="profile-email">alex@example.com</div>
+      <div style="font-size:12px;color:var(--brand);margin-top:4px;">Austin, TX · Member since 2024</div>
+    </div>
+  </div>
+
+  <div class="menu-section">
+    <div class="menu-label">Shopping</div>
+    <div class="menu-list">
+      <a href="../cart.html" class="menu-item">
+        <div class="menu-item-icon">🛒</div>
+        <div class="menu-item-text">My Cart</div>
+        <div class="menu-item-arrow">›</div>
+      </a>
+      <a href="#" class="menu-item" onclick="alert('Order history coming soon!')">
+        <div class="menu-item-icon">📦</div>
+        <div class="menu-item-text">Order History</div>
+        <div class="menu-item-arrow">›</div>
+      </a>
+      <a href="#" class="menu-item" onclick="alert('Saved stores coming soon!')">
+        <div class="menu-item-icon">❤️</div>
+        <div class="menu-item-text">Saved Stores</div>
+        <div class="menu-item-arrow">›</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="menu-section">
+    <div class="menu-label">Account</div>
+    <div class="menu-list">
+      <a href="#" class="menu-item" onclick="alert('Settings coming soon!')">
+        <div class="menu-item-icon">⚙️</div>
+        <div class="menu-item-text">Settings</div>
+        <div class="menu-item-arrow">›</div>
+      </a>
+      <a href="#" class="menu-item" onclick="alert('Are you a merchant? Merchant portal coming soon!')">
+        <div class="menu-item-icon">🏪</div>
+        <div class="menu-item-text">List your store</div>
+        <div class="menu-item-arrow">›</div>
+      </a>
+      <a href="#" class="menu-item" onclick="alert('Signed out!')">
+        <div class="menu-item-icon">🚪</div>
+        <div class="menu-item-text" style="color:var(--brand);">Sign out</div>
+        <div class="menu-item-arrow">›</div>
+      </a>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="../index.html" class="nav-item">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Home</span>
+    </a>
+    <a href="search.html" class="nav-item">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <span>Search</span>
+    </a>
+    <a href="map.html" class="nav-item">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+      <span>Map</span>
+    </a>
+    <a href="../cart.html" class="nav-item">
+      <span class="nav-icon-wrap">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="nav-badge">0</span>
+      </span>
+      <span>Cart</span>
+    </a>
+    <a href="profile.html" class="nav-item active">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <script src="../js/data.js"></script>
+  <script>updateCartBadge();</script>
+</body>
+</html>
