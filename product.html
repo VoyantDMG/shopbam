@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product — ShopBAM</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    .product-img {
+      background: var(--bg-secondary);
+      height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 96px;
+      position: relative;
+    }
+    .badge-local {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: var(--text-primary);
+      color: var(--bg-primary);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .product-body {
+      background: var(--bg-primary);
+      padding: 18px 16px 0;
+    }
+    .store-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .store-avatar-sm {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+    .store-link {
+      font-size: 13px;
+      color: var(--brand);
+      font-weight: 500;
+      text-decoration: none;
+    }
+    .store-link:hover { text-decoration: underline; }
+    .store-dist-sm { font-size: 12px; color: var(--text-tertiary); margin-left: auto; }
+
+    .prod-title { font-size: 22px; font-weight: 500; line-height: 1.3; margin-bottom: 10px; }
+    .prod-price-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+    .prod-price-lg { font-size: 28px; font-weight: 500; color: var(--brand); }
+    .rating-row { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--text-secondary); }
+    .stars { color: var(--amber); font-size: 13px; }
+
+    .section-divider { height: 0.5px; background: var(--border); margin: 0 -16px; }
+    .prod-section { padding: 16px 0; }
+    .prod-section-title { font-size: 13px; font-weight: 500; margin-bottom: 8px; }
+    .prod-section-body { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .tag {
+      background: var(--bg-secondary);
+      border: 0.5px solid var(--border);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .qty-row {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      width: fit-content;
+    }
+    .qty-btn {
+      width: 40px;
+      height: 40px;
+      background: var(--bg-secondary);
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+    .qty-btn:hover { background: var(--border); }
+    .qty-val {
+      width: 48px;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 500;
+      border-left: 0.5px solid var(--border);
+      border-right: 0.5px solid var(--border);
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .stock-info { font-size: 13px; color: var(--text-secondary); }
+
+    .store-card-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      margin-top: 8px;
+      text-decoration: none;
+      color: inherit;
+      transition: opacity 0.15s;
+    }
+    .store-card-link:hover { opacity: 0.8; }
+    .store-card-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .store-card-name { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+    .store-card-meta { font-size: 12px; color: var(--text-secondary); }
+    .store-card-arrow { margin-left: auto; font-size: 20px; color: var(--text-tertiary); }
+
+    .reviews-list { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; padding-bottom: 100px; }
+    .review {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      padding: 12px;
+    }
+    .review-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .reviewer-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--bg-primary);
+      border: 0.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+    .reviewer-name { font-size: 13px; font-weight: 500; }
+    .review-date { font-size: 11px; color: var(--text-tertiary); margin-left: auto; }
+    .review-stars { color: var(--amber); font-size: 12px; margin-bottom: 4px; }
+    .review-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+    .sticky-footer {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      background: var(--bg-primary);
+      border-top: 0.5px solid var(--border);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      z-index: 50;
+    }
+    .footer-price { font-size: 20px; font-weight: 500; color: var(--brand); }
+    .footer-sub { font-size: 11px; color: var(--text-tertiary); }
+    .add-cart-btn {
+      flex: 1;
+      background: var(--brand);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 500;
+      font-family: var(--font-body);
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .add-cart-btn:hover { background: var(--brand-dark); }
+    .add-cart-btn:active { transform: scale(0.98); }
+
+    :root { --amber: #BA7517; }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <a href="javascript:history.back()" class="page-back">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    </a>
+    <div class="page-title" id="pageTitle">Product</div>
+    <button class="page-back" style="margin-left:auto;" onclick="shareProduct()" title="Share">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+    </button>
+  </header>
+
+  <div class="product-img" id="productImg">
+    <span id="productEmoji">🧣</span>
+    <div class="badge-local">Local maker</div>
+  </div>
+
+  <div class="product-body">
+    <div class="store-row">
+      <div class="store-avatar-sm" id="storeAvatarSm" style="background:#FAECE7;"></div>
+      <a href="store.html?id=1" class="store-link" id="storeName">Clover Goods</a>
+      <div class="store-dist-sm" id="storeDist">0.3 mi away</div>
+    </div>
+
+    <div class="prod-title" id="prodTitle">Hand-knit Wool Scarf</div>
+
+    <div class="prod-price-row">
+      <div class="prod-price-lg" id="prodPriceLg">$38</div>
+      <div class="rating-row">
+        <span class="stars">★★★★★</span>
+        <span id="ratingText">4.9 (32 reviews)</span>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <div class="prod-section">
+      <div class="prod-section-title">About this product</div>
+      <div class="prod-section-body" id="prodDesc">Handcrafted by local Austin artisan Maya Rivera using 100% merino wool. Each scarf is one-of-a-kind — no two are exactly alike. Warm, lightweight, and built to last for years.</div>
+      <div class="tags" id="prodTags">
+        <div class="tag">Handmade</div>
+        <div class="tag">Merino wool</div>
+        <div class="tag">Local artisan</div>
+        <div class="tag">One-of-a-kind</div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <div class="prod-section">
+      <div class="prod-section-title">Quantity</div>
+      <div style="display:flex;align-items:center;gap:16px;margin-top:4px;">
+        <div class="qty-row">
+          <button class="qty-btn" id="decBtn">−</button>
+          <div class="qty-val" id="qtyVal">1</div>
+          <button class="qty-btn" id="incBtn">+</button>
+        </div>
+        <div class="stock-info" id="stockInfo">12 in stock</div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <div class="prod-section">
+      <div class="prod-section-title">From the store</div>
+      <a href="store.html?id=1" class="store-card-link" id="storeCard">
+        <div class="store-card-avatar" id="storeCardAvatar" style="background:#FAECE7;">👜</div>
+        <div>
+          <div class="store-card-name" id="storeCardName">Clover Goods</div>
+          <div class="store-card-meta" id="storeCardMeta">Clothing & Accessories · 0.3 mi · ★ 4.8</div>
+        </div>
+        <div class="store-card-arrow">›</div>
+      </a>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <div class="prod-section">
+      <div class="prod-section-title">Reviews (32)</div>
+      <div class="reviews-list">
+        <div class="review">
+          <div class="review-header">
+            <div class="reviewer-avatar">AJ</div>
+            <div class="reviewer-name">Alex J.</div>
+            <div class="review-date">2 days ago</div>
+          </div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">Absolutely love this scarf! So soft and warm. I've gotten so many compliments. Will definitely be buying more from this store.</div>
+        </div>
+        <div class="review">
+          <div class="review-header">
+            <div class="reviewer-avatar">MS</div>
+            <div class="reviewer-name">Maria S.</div>
+            <div class="review-date">1 week ago</div>
+          </div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">Beautiful quality and fast pickup. Love that I can support a local maker. The colors are even better in person.</div>
+        </div>
+        <div class="review">
+          <div class="review-header">
+            <div class="reviewer-avatar">JT</div>
+            <div class="reviewer-name">Jordan T.</div>
+            <div class="review-date">2 weeks ago</div>
+          </div>
+          <div class="review-stars">★★★★☆</div>
+          <div class="review-text">Great scarf, very cozy. Shipping was quick. Only wish there were more color options but overall very happy!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sticky-footer">
+    <div>
+      <div class="footer-price" id="footerPrice">$38</div>
+      <div class="footer-sub" id="footerSub">1 item</div>
+    </div>
+    <button class="add-cart-btn" id="addCartBtn">Add to cart</button>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="../js/data.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const prodId = parseInt(params.get('id')) || 101;
+    const product = PRODUCTS.find(p => p.id === prodId);
+    const store = product ? STORES.find(s => s.id === product.storeId) : null;
+
+    let qty = 1;
+    let maxStock = 12;
+
+    if (product && store) {
+      document.getElementById('pageTitle').textContent = product.name;
+      document.getElementById('prodTitle').textContent = product.name;
+      document.getElementById('productEmoji').textContent = product.emoji;
+      document.getElementById('productImg').style.background = product.imgBg;
+      document.getElementById('prodPriceLg').textContent = '$' + product.price;
+      document.getElementById('footerPrice').textContent = '$' + product.price;
+      document.getElementById('storeName').textContent = store.name;
+      document.getElementById('storeName').href = 'store.html?id=' + store.id;
+      document.getElementById('storeDist').textContent = store.distance + ' away';
+      document.getElementById('storeAvatarSm').textContent = store.emoji;
+      document.getElementById('storeAvatarSm').style.background = store.avatarBg;
+      document.getElementById('storeCardAvatar').textContent = store.emoji;
+      document.getElementById('storeCardAvatar').style.background = store.avatarBg;
+      document.getElementById('storeCardName').textContent = store.name;
+      document.getElementById('storeCardMeta').textContent = store.categoryLabel + ' · ' + store.distance + ' · ★ ' + store.rating;
+      document.getElementById('storeCard').href = 'store.html?id=' + store.id;
+    }
+
+    function updateQty() {
+      document.getElementById('qtyVal').textContent = qty;
+      const price = product ? product.price : 38;
+      document.getElementById('footerPrice').textContent = '$' + (price * qty);
+      document.getElementById('footerSub').textContent = qty + (qty === 1 ? ' item' : ' items');
+    }
+
+    document.getElementById('incBtn').addEventListener('click', () => {
+      if (qty < maxStock) { qty++; updateQty(); }
+    });
+    document.getElementById('decBtn').addEventListener('click', () => {
+      if (qty > 1) { qty--; updateQty(); }
+    });
+
+    document.getElementById('addCartBtn').addEventListener('click', () => {
+      if (product) {
+        for (let i = 0; i < qty; i++) addToCart(product.id);
+      }
+      showToast(qty + (qty === 1 ? ' item' : ' items') + ' added to cart');
+    });
+
+    function shareProduct() {
+      if (navigator.share) {
+        navigator.share({ title: product ? product.name : 'ShopBAM Product', url: window.location.href });
+      } else {
+        navigator.clipboard.writeText(window.location.href).then(() => showToast('Link copied!'));
+      }
+    }
+
+    updateCartBadge();
+  </script>
+</body>
+</html>

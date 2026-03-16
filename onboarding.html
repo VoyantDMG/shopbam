@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>List your store — ShopBAM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brand: #D85A30; --brand-dark: #993C1D; --brand-light: #FAECE7;
+      --text-1: #1a1a18; --text-2: #6b6b67; --text-3: #9e9e98;
+      --bg: #f0efe9; --surface: #ffffff; --border: rgba(0,0,0,0.1);
+      --radius-md: 10px; --radius-lg: 16px; --radius-xl: 24px;
+      --font: 'DM Sans', system-ui, sans-serif;
+      --display: 'Playfair Display', serif;
+      --green: #3B6D11; --green-bg: #EAF3DE;
+    }
+    body { font-family: var(--font); background: var(--bg); color: var(--text-1); min-height: 100vh; }
+
+    /* Header */
+    .header { background: var(--surface); border-bottom: 0.5px solid var(--border); padding: 14px 20px; display: flex; align-items: center; gap: 12px; }
+    .header-logo { font-family: var(--display); font-size: 20px; }
+    .header-logo span { color: var(--brand); }
+    .header-back { width: 34px; height: 34px; border-radius: 50%; border: 0.5px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-1); text-decoration: none; background: var(--bg); }
+
+    /* Progress bar */
+    .progress-wrap { background: var(--surface); padding: 12px 20px; border-bottom: 0.5px solid var(--border); }
+    .progress-bar { height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--brand); border-radius: 4px; transition: width 0.4s ease; }
+    .progress-label { font-size: 12px; color: var(--text-3); margin-top: 6px; }
+
+    /* Steps */
+    .step { display: none; max-width: 480px; margin: 0 auto; padding: 28px 20px 100px; }
+    .step.active { display: block; }
+
+    .step-icon { width: 56px; height: 56px; border-radius: 16px; background: var(--brand-light); display: flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 16px; }
+    .step-title { font-family: var(--display); font-size: 24px; margin-bottom: 6px; line-height: 1.3; }
+    .step-sub { font-size: 14px; color: var(--text-2); line-height: 1.6; margin-bottom: 24px; }
+
+    /* Form */
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .field label { font-size: 12px; font-weight: 500; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.06em; }
+    .field input, .field select, .field textarea {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      font-size: 15px;
+      font-family: var(--font);
+      color: var(--text-1);
+      outline: none;
+      transition: border-color 0.15s;
+      width: 100%;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--brand); }
+    .field textarea { resize: vertical; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* Category grid */
+    .cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 24px; }
+    .cat-option { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-lg); padding: 14px 10px; text-align: center; cursor: pointer; transition: all 0.15s; }
+    .cat-option:hover { border-color: var(--brand); }
+    .cat-option.selected { border-color: var(--brand); background: var(--brand-light); }
+    .cat-option-emoji { font-size: 24px; margin-bottom: 6px; }
+    .cat-option-label { font-size: 12px; font-weight: 500; color: var(--text-2); }
+    .cat-option.selected .cat-option-label { color: var(--brand-dark); }
+
+    /* Hours grid */
+    .hours-grid { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+    .hour-row { display: grid; grid-template-columns: 80px 1fr 1fr; gap: 10px; align-items: center; }
+    .hour-day { font-size: 13px; color: var(--text-2); font-weight: 500; }
+    .hour-row input { padding: 8px 10px; font-size: 13px; }
+
+    /* Plan cards */
+    .plan-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+    .plan-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-lg); padding: 18px; cursor: pointer; transition: all 0.15s; position: relative; }
+    .plan-card:hover { border-color: var(--brand); }
+    .plan-card.selected { border-color: var(--brand); background: var(--brand-light); }
+    .plan-card.recommended { border-color: var(--brand); }
+    .plan-badge { position: absolute; top: -10px; left: 16px; background: var(--brand); color: #fff; font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 10px; }
+    .plan-name { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
+    .plan-price { font-size: 13px; color: var(--text-2); margin-bottom: 10px; }
+    .plan-features { display: flex; flex-direction: column; gap: 4px; }
+    .plan-feature { font-size: 13px; color: var(--text-2); display: flex; align-items: center; gap: 8px; }
+    .plan-feature-check { color: var(--green); font-size: 14px; }
+
+    /* Success screen */
+    .success-wrap { text-align: center; padding: 40px 20px; }
+    .success-icon { font-size: 64px; margin-bottom: 16px; }
+    .success-title { font-family: var(--display); font-size: 26px; margin-bottom: 8px; }
+    .success-sub { font-size: 14px; color: var(--text-2); line-height: 1.7; max-width: 300px; margin: 0 auto 28px; }
+    .success-url { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 12px 16px; font-size: 13px; color: var(--brand); font-weight: 500; margin-bottom: 24px; word-break: break-all; }
+
+    /* Footer CTA */
+    .step-footer { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 0.5px solid var(--border); padding: 14px 20px; display: flex; gap: 12px; max-width: 480px; margin: 0 auto; }
+    .btn-primary { flex: 1; background: var(--brand); color: #fff; border: none; border-radius: var(--radius-md); padding: 14px; font-size: 15px; font-weight: 500; font-family: var(--font); cursor: pointer; transition: background 0.15s; }
+    .btn-primary:hover { background: var(--brand-dark); }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-secondary { background: transparent; color: var(--text-2); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 14px 20px; font-size: 15px; font-family: var(--font); cursor: pointer; transition: all 0.15s; }
+    .btn-secondary:hover { border-color: var(--brand); color: var(--brand); }
+
+    .error-msg { font-size: 12px; color: #E24B4A; margin-top: 4px; display: none; }
+    .error-msg.show { display: block; }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <a href="../index.html" class="header-back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    </a>
+    <div class="header-logo">Shop<span>BAM</span></div>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:20%"></div></div>
+    <div class="progress-label" id="progressLabel">Step 1 of 5</div>
+  </div>
+
+  <!-- Step 1: Welcome -->
+  <div class="step active" id="step1">
+    <div class="step-icon">🏪</div>
+    <h1 class="step-title">List your store on ShopBAM</h1>
+    <p class="step-sub">Join hundreds of local Austin businesses connecting with nearby shoppers. It takes about 5 minutes to get your store live.</p>
+
+    <div class="field">
+      <label>Your name</label>
+      <input type="text" id="ownerName" placeholder="e.g. Sarah Miller" />
+      <div class="error-msg" id="err-ownerName">Please enter your name</div>
+    </div>
+    <div class="field">
+      <label>Email address</label>
+      <input type="email" id="ownerEmail" placeholder="you@yourbusiness.com" />
+      <div class="error-msg" id="err-ownerEmail">Please enter a valid email</div>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="ownerPassword" placeholder="At least 8 characters" />
+      <div class="error-msg" id="err-ownerPassword">Password must be at least 8 characters</div>
+    </div>
+  </div>
+
+  <!-- Step 2: Store info -->
+  <div class="step" id="step2">
+    <div class="step-icon">✏️</div>
+    <h1 class="step-title">Tell us about your store</h1>
+    <p class="step-sub">This is what shoppers will see on your storefront page.</p>
+
+    <div class="field">
+      <label>Store name</label>
+      <input type="text" id="storeName" placeholder="e.g. Clover Goods" />
+      <div class="error-msg" id="err-storeName">Please enter your store name</div>
+    </div>
+    <div class="field">
+      <label>Store description</label>
+      <textarea id="storeDesc" rows="3" placeholder="What do you sell? What makes your store special?"></textarea>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Phone number</label>
+        <input type="tel" id="storePhone" placeholder="(512) 555-0100" />
+      </div>
+      <div class="field">
+        <label>Website (optional)</label>
+        <input type="url" id="storeWebsite" placeholder="yourstore.com" />
+      </div>
+    </div>
+    <div class="field">
+      <label>Street address</label>
+      <input type="text" id="storeAddress" placeholder="214 W 2nd St, Austin TX 78701" />
+      <div class="error-msg" id="err-storeAddress">Please enter your store address</div>
+    </div>
+  </div>
+
+  <!-- Step 3: Category -->
+  <div class="step" id="step3">
+    <div class="step-icon">🗂️</div>
+    <h1 class="step-title">What do you sell?</h1>
+    <p class="step-sub">Choose the category that best fits your store. This helps shoppers discover you.</p>
+
+    <div class="cat-grid" id="catGrid">
+      <div class="cat-option" data-cat="clothing"><div class="cat-option-emoji">👗</div><div class="cat-option-label">Clothing</div></div>
+      <div class="cat-option" data-cat="food"><div class="cat-option-emoji">🥐</div><div class="cat-option-label">Food & Drink</div></div>
+      <div class="cat-option" data-cat="home"><div class="cat-option-emoji">🪴</div><div class="cat-option-label">Home Goods</div></div>
+      <div class="cat-option" data-cat="books"><div class="cat-option-emoji">📚</div><div class="cat-option-label">Books</div></div>
+      <div class="cat-option" data-cat="beauty"><div class="cat-option-emoji">✨</div><div class="cat-option-label">Beauty</div></div>
+      <div class="cat-option" data-cat="hardware"><div class="cat-option-emoji">🔧</div><div class="cat-option-label">Hardware</div></div>
+      <div class="cat-option" data-cat="sports"><div class="cat-option-emoji">⚽</div><div class="cat-option-label">Sports</div></div>
+      <div class="cat-option" data-cat="art"><div class="cat-option-emoji">🎨</div><div class="cat-option-label">Art & Crafts</div></div>
+      <div class="cat-option" data-cat="other"><div class="cat-option-emoji">🛍️</div><div class="cat-option-label">Other</div></div>
+    </div>
+    <div class="error-msg" id="err-cat" style="margin-top:-16px;">Please select a category</div>
+  </div>
+
+  <!-- Step 4: Hours -->
+  <div class="step" id="step4">
+    <div class="step-icon">🕐</div>
+    <h1 class="step-title">Set your store hours</h1>
+    <p class="step-sub">Shoppers will see these on your storefront. You can update them anytime in your dashboard.</p>
+
+    <div class="hours-grid">
+      <div class="hour-row"><div class="hour-day">Monday</div><input type="time" value="09:00" /><input type="time" value="18:00" /></div>
+      <div class="hour-row"><div class="hour-day">Tuesday</div><input type="time" value="09:00" /><input type="time" value="18:00" /></div>
+      <div class="hour-row"><div class="hour-day">Wednesday</div><input type="time" value="09:00" /><input type="time" value="18:00" /></div>
+      <div class="hour-row"><div class="hour-day">Thursday</div><input type="time" value="09:00" /><input type="time" value="18:00" /></div>
+      <div class="hour-row"><div class="hour-day">Friday</div><input type="time" value="09:00" /><input type="time" value="20:00" /></div>
+      <div class="hour-row"><div class="hour-day">Saturday</div><input type="time" value="10:00" /><input type="time" value="20:00" /></div>
+      <div class="hour-row"><div class="hour-day">Sunday</div><input type="time" value="11:00" /><input type="time" value="17:00" /></div>
+    </div>
+  </div>
+
+  <!-- Step 5: Plan -->
+  <div class="step" id="step5">
+    <div class="step-icon">🚀</div>
+    <h1 class="step-title">Choose your plan</h1>
+    <p class="step-sub">ShopBAM charges a small fee per transaction — no monthly subscription required.</p>
+
+    <div class="plan-grid">
+      <div class="plan-card" data-plan="starter">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price">8% transaction fee · Free to list</div>
+        <div class="plan-features">
+          <div class="plan-feature"><span class="plan-feature-check">✓</span> Up to 25 products</div>
+          <div class="plan-feature"><span class="plan-feature-check">✓</span> Basic storefront</div>
+          <div class="plan-feature"><span class="plan-feature-check">✓</span> Order notifications</div>
+        </div>
+      </div>
+
+      <div class="plan-card recommended selected" data-plan="growth">
+        <div class="plan-badge">Most popular</div>
+        <div class="plan-name">Growth</div>
+        <div class="plan-price">5% transaction fee · Free to list</div>
+        <div class="plan-features">
+          <div class="plan-feature"><span class="plan-feature-check">✓</span> Unlimited products</div>
+          <div class="plan-feature"><span class="plan-feature-check">✓</span> Featured in search</div>
+          <div class="plan-feature"><span class="plan-feature-check">✓</span> Analytics dashboard</div>
+          <div class="plan-feature"><span class="plan-feature-check">✓</span> Priority support</div>
+        </div>
+      </div>
+
+      <div class="plan-card" data-plan="pro">
+        <div class="plan-name">Pro</div>
+        <div class="plan-price">3% transaction fee · $29/mo</div>
+        <div class="plan-features">
+          <div class="plan-feature"><span class="plan-feature-check">✓</span> Everything in Growth</div>
+          <div class="plan-feature"><span class="plan-feature-check">✓</span> Homepage placement</div>
+          <div class="plan-feature"><span class="plan-feature-check">✓</span> Custom store URL</div>
+          <div class="plan-feature"><span class="plan-feature-check">✓</span> Dedicated account manager</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 6: Success -->
+  <div class="step" id="step6">
+    <div class="success-wrap">
+      <div class="success-icon">🎉</div>
+      <h1 class="success-title">You're live on ShopBAM!</h1>
+      <p class="success-sub">Your store is now visible to local shoppers near you. Start adding products to your dashboard to make your first sale.</p>
+      <div class="success-url" id="successUrl">shopbam.app/stores/your-store</div>
+      <a href="../merchant/index.html" class="btn-primary" style="display:block;text-align:center;text-decoration:none;padding:14px;border-radius:10px;font-size:15px;font-weight:500;background:var(--brand);color:#fff;">Go to merchant dashboard</a>
+    </div>
+  </div>
+
+  <div class="step-footer" id="stepFooter">
+    <button class="btn-secondary" id="backBtn" style="display:none;">Back</button>
+    <button class="btn-primary" id="nextBtn">Continue</button>
+  </div>
+
+  <script>
+    let currentStep = 1;
+    const totalSteps = 5;
+    let selectedCategory = null;
+    let selectedPlan = 'growth';
+
+    function updateProgress() {
+      const pct = (currentStep / totalSteps) * 100;
+      document.getElementById('progressFill').style.width = pct + '%';
+      document.getElementById('progressLabel').textContent = 'Step ' + currentStep + ' of ' + totalSteps;
+    }
+
+    function showStep(n) {
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step' + n).classList.add('active');
+      const backBtn = document.getElementById('backBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const footer = document.getElementById('stepFooter');
+
+      if (n === 6) {
+        footer.style.display = 'none';
+        return;
+      }
+      footer.style.display = 'flex';
+      backBtn.style.display = n > 1 ? 'block' : 'none';
+      nextBtn.textContent = n === totalSteps ? 'Launch my store 🚀' : 'Continue';
+    }
+
+    function validate() {
+      if (currentStep === 1) {
+        const name = document.getElementById('ownerName').value.trim();
+        const email = document.getElementById('ownerEmail').value.trim();
+        const pass = document.getElementById('ownerPassword').value;
+        let ok = true;
+        document.getElementById('err-ownerName').classList.toggle('show', !name);
+        document.getElementById('err-ownerEmail').classList.toggle('show', !email || !email.includes('@'));
+        document.getElementById('err-ownerPassword').classList.toggle('show', pass.length < 8);
+        if (!name) ok = false;
+        if (!email || !email.includes('@')) ok = false;
+        if (pass.length < 8) ok = false;
+        return ok;
+      }
+      if (currentStep === 2) {
+        const name = document.getElementById('storeName').value.trim();
+        const addr = document.getElementById('storeAddress').value.trim();
+        document.getElementById('err-storeName').classList.toggle('show', !name);
+        document.getElementById('err-storeAddress').classList.toggle('show', !addr);
+        return name && addr;
+      }
+      if (currentStep === 3) {
+        const ok = !!selectedCategory;
+        document.getElementById('err-cat').classList.toggle('show', !ok);
+        return ok;
+      }
+      return true;
+    }
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      if (!validate()) return;
+      if (currentStep < totalSteps) {
+        currentStep++;
+        updateProgress();
+        showStep(currentStep);
+        window.scrollTo(0, 0);
+      } else {
+        // Submit — show success
+        const storeName = document.getElementById('storeName').value.trim() || 'your-store';
+        const slug = storeName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+        document.getElementById('successUrl').textContent = 'shopbam.app/stores/' + slug;
+        currentStep = 6;
+        document.getElementById('progressFill').style.width = '100%';
+        document.getElementById('progressLabel').textContent = 'All done!';
+        showStep(6);
+        window.scrollTo(0, 0);
+      }
+    });
+
+    document.getElementById('backBtn').addEventListener('click', () => {
+      if (currentStep > 1) {
+        currentStep--;
+        updateProgress();
+        showStep(currentStep);
+        window.scrollTo(0, 0);
+      }
+    });
+
+    // Category selection
+    document.getElementById('catGrid').addEventListener('click', (e) => {
+      const opt = e.target.closest('.cat-option');
+      if (!opt) return;
+      document.querySelectorAll('.cat-option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      selectedCategory = opt.dataset.cat;
+      document.getElementById('err-cat').classList.remove('show');
+    });
+
+    // Plan selection
+    document.querySelectorAll('.plan-card[data-plan]').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedPlan = card.dataset.plan;
+      });
+    });
+
+    updateProgress();
+  </script>
+</body>
+</html>
